@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { NextSeo } from 'next-seo';
 import { FaGithub } from 'react-icons/fa';
@@ -25,6 +25,27 @@ export default function Home() {
 
   const handleCategory = (e: ChangeEvent<HTMLSelectElement>) =>
     setCategory(e.target.value as CategoryType);
+
+  const memoizedMap = useMemo(
+    () =>
+      data.data.nodes.map((item: DataProps, i: number) => {
+        if (
+          item.category.name.toLowerCase().split(' ').join('') !== category &&
+          category !== 'all'
+        )
+          return <></>;
+
+        return (
+          <div key={i} className="px-5 py-5 rounded-md bg-gray-100">
+            {/* API returns 404 - image not found with this src */}
+            {/* <Image src={item.images[0].src} alt={item.images[0].alt} height={50} width={50}/> */}
+            <small>{item.name}</small>
+            <div className="text-sm text-gray-500"></div>
+          </div>
+        );
+      }),
+    [category],
+  );
 
   return (
     <>
@@ -82,18 +103,7 @@ export default function Home() {
 
       <div className="container mx-auto px-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {data.data.nodes.map((item: DataProps, i: number) => {
-            if (item.category.name.toLowerCase().split(' ').join('') !== category && category !== 'all') return <></>
-
-            return (
-              <div key={i} className="px-5 py-5 rounded-md bg-gray-100">
-                {/* API returns 404 - image not found with this src */}
-                {/* <Image src={item.images[0].src} alt={item.images[0].alt} height={50} width={50}/> */}
-                <small>{item.name}</small>
-                <div className="text-sm text-gray-500"></div>
-              </div>
-            );
-          })}
+          {memoizedMap}
         </div>
       </div>
     </>
