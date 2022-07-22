@@ -1,4 +1,8 @@
-# next-tailwind-boilerplate
+# The Brooklyn Brothers
+------------------------------------------------------------------------------------
+
+- Project created to serve and filter the information from data.json provided by their Challenge.
+   - Deploy: [The Brooklyn Brothers - Sorting](https://tbb-challenge.vercel.app/)
 
 ## Features
 
