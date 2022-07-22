@@ -1,10 +1,30 @@
-import React from 'react';
-import { useRouter } from 'next/router';
+import React, { ChangeEvent, useState } from 'react';
+import Image from 'next/image';
 import { NextSeo } from 'next-seo';
 import { FaGithub } from 'react-icons/fa';
+import data from '../data/data.json';
+
+interface DataProps {
+  name: string;
+  shortDescription: string;
+  id: string;
+  images: {
+    alt: string;
+    src: string;
+  }[];
+  category: {
+    name: string;
+    id: string;
+  };
+}
+
+type CategoryType = 'all' | 'rollon' | 'aerosol' | 'stick';
 
 export default function Home() {
-  const router = useRouter();
+  const [category, setCategory] = useState<CategoryType>('all');
+
+  const handleCategory = (e: ChangeEvent<HTMLSelectElement>) =>
+    setCategory(e.target.value as CategoryType);
 
   return (
     <>
@@ -27,17 +47,30 @@ export default function Home() {
         }}
       />
 
-      <div className="border-b border-gray-300 mb-5">
+      <div className="border-b border-gray-300 mb-5 shadow-md">
         <div className="container mx-auto px-5">
-          <div className="flex justify-start items-center py-5 space-x-3">
-            <div className="text-2xl text-gray-700">The Brooklyn Brothers</div>
-            <div className="flex-1" />
+          <div className="flex justify-between items-center py-5 space-x-3">
+            <div className="text-2xl text-gray-700 md:block hidden">
+              The Brooklyn Brothers
+            </div>
+
+            <select
+              placeholder="category"
+              className="md:w-1/4 w-3/4 h-8 rounded-sm shadow-md cursor-pointer px-2 bg-gray-100"
+              value={category}
+              onChange={(e) => handleCategory(e)}
+            >
+              <option value="all">All</option>
+              <option value="aerosol">Aerosol</option>
+              <option value="rollon">Roll On</option>
+              <option value="stick">Stick</option>
+            </select>
 
             <div
               className="cursor-pointer"
               onClick={() =>
                 window.open(
-                  'https://github.com/haneyume/next-tailwind-boilerplate',
+                  'https://github.com/lirbre/the-brooklyn-brothers-challenge',
                 )
               }
             >
@@ -49,24 +82,15 @@ export default function Home() {
 
       <div className="container mx-auto px-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {[
-            { title: 'Next.js', url: 'https://nextjs.org/' },
-            { title: 'Tailwind CSS', url: 'https://tailwindcss.com/' },
-            { title: 'Typescript', url: 'https://www.typescriptlang.org/' },
-            { title: 'axios', url: 'https://axios-http.com/' },
-            { title: 'i18next', url: 'https://www.i18next.com/' },
-            { title: 'swr', url: 'https://swr.vercel.app/' },
-            { title: 'npm', url: 'https://www.npmjs.com/' },
-            { title: 'ESLint', url: 'https://eslint.org/' },
-          ].map((item, index) => {
+          {data.data.nodes.map((item: DataProps, i: number) => {
+            if (item.category.name.toLowerCase().split(' ').join('') !== category && category !== 'all') return <></>
+
             return (
-              <div
-                key={index}
-                className="px-5 py-5 rounded-md bg-gray-100 cursor-pointer"
-                onClick={() => window.open(item.url)}
-              >
-                <div>{item.title}</div>
-                <div className="text-sm text-gray-500">{item.url}</div>
+              <div key={i} className="px-5 py-5 rounded-md bg-gray-100">
+                {/* API returns 404 - image not found with this src */}
+                {/* <Image src={item.images[0].src} alt={item.images[0].alt} height={50} width={50}/> */}
+                <small>{item.name}</small>
+                <div className="text-sm text-gray-500"></div>
               </div>
             );
           })}
