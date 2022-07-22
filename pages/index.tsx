@@ -38,9 +38,9 @@ export default function Home() {
           return <></>;
 
         return (
-          <div key={i} className="px-5 py-2 rounded-md bg-gray-100 flex gap-2 items-center justify-between">
-            <Image src={item.images[0].asset.url} alt={item.images[0].alt} height={50} width={50}/>
-            <small>{item.name}</small>
+          <div key={i} className="px-3.5 py-2 rounded-md bg-gray-100 flex gap-6 items-center justify-between shadow-lg">
+            <Image src={item.images[0].asset.url} alt={item.images[0].alt} height={75} width={75}/>
+            <small className='w-full text-left'>{item.name}</small>
           </div>
         );
       }),
